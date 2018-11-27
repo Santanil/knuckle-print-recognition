@@ -1,1 +1,1 @@
-# knuckle-print-recognition
+# Knuckle print recognition
