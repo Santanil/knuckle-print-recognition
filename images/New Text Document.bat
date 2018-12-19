@@ -1,0 +1,1 @@
+del *_new.jpg
