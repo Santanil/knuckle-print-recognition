@@ -2,3 +2,4 @@
 imagecleanup.bat
 run_app.bat
 setup.config
+*.pyc
