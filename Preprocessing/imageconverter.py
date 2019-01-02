@@ -4,10 +4,12 @@ from glob import glob
 from scipy import ndimage,misc
 import numpy as np
 import matplotlib.pyplot as plt
-
 # For blur detection
-from imutils import paths
 import cv2
+
+# For deblurring
+from skimage import restoration
+from scipy.signal import convolve2d as conv2
 
 class ImageConverter:
     # Memory to store images to be preprocessed
@@ -70,6 +72,26 @@ class ImageConverter:
             blur_value = self.detectBlur(imagearray)
             print("--Blur Value (less is more) :", blur_value)
 
+    def deblurring(self):
+        psf = np.ones((25, 25))
+        m_temporaryImageList = []
+        m_temporaryImageList[:] = ImageConverter.imageQueue[:]
+        ImageConverter.imageQueue[:] = []
+        for image in m_temporaryImageList:
+            deconvolved_image = restoration.wiener(image, psf , balance = 2110)
+            ImageConverter.imageQueue.append(deconvolved_image)
+        del m_temporaryImageList
+
+    def normalizeImages(self):
+        m_temporaryImageList = []
+        m_temporaryImageList[:] = ImageConverter.imageQueue[:]
+        ImageConverter.imageQueue[:] = []
+        for image in m_temporaryImageList:
+            normalizedImg = np.zeros(image.shape)
+            normalizedImg = cv2.normalize(image,  normalizedImg, 0, 255, cv2.NORM_MINMAX)
+            ImageConverter.imageQueue.append(normalizedImg)
+        del m_temporaryImageList
+        
     @staticmethod
     def showImageQueue():
         for i in ImageConverter.imageQueue:
