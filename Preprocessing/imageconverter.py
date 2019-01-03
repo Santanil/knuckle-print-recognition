@@ -11,6 +11,9 @@ import cv2
 from skimage import restoration
 from scipy.signal import convolve2d as conv2
 
+# for image segmentation
+from skimage import filters
+
 class ImageConverter:
     # Memory to store images to be preprocessed
     imageQueue=[]
@@ -91,7 +94,19 @@ class ImageConverter:
             normalizedImg = cv2.normalize(image,  normalizedImg, 0, 255, cv2.NORM_MINMAX)
             ImageConverter.imageQueue.append(normalizedImg)
         del m_temporaryImageList
-        
+    
+    # this method helps the image to convert into binary form
+    def imageSegmentation(self):
+        m_temporaryImageList = []
+        m_temporaryImageList[:] = ImageConverter.imageQueue[:]
+        ImageConverter.imageQueue[:] = []
+        for image in m_temporaryImageList:
+            thresh = filters.threshold_otsu(image)
+            mask = image < thresh
+            # ret , thresh = cv2.threshold(image,0,255,cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
+            ImageConverter.imageQueue.append(mask)
+        del m_temporaryImageList
+       
     @staticmethod
     def showImageQueue():
         for i in ImageConverter.imageQueue:

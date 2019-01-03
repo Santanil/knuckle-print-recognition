@@ -9,7 +9,7 @@ with open("setup.config",'r') as setupfile:
     imageDir = setupfile.read()
 
 print("\n\nLoading... ",end='')
-print(imageDir)
+print(imageDir,"\n")
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--convert_to_grayscale", help="convert images to grayscale", action="store_true")
@@ -20,6 +20,7 @@ parser.add_argument("--restore_images", help="restore images", action="store_tru
 parser.add_argument("--normalize_images", help="normalize images", action="store_true")
 parser.add_argument("--show_images", help="show images in different window", action="store_true")
 parser.add_argument("--save_images", help="save images in a different folder", action="store_true")
+parser.add_argument("--segment_images",help = "transforms images into binary format",action = "store_true")
 
 args = parser.parse_args()
 
@@ -50,6 +51,10 @@ if args.normalize_images:
     imageConverter.normalizeImages()
     # ImageConverter.showImage("After normalizing")
     # ImageConverter.showImageQueue()
+if args.segment_images:
+    imageConverter.imageSegmentation()
+    ImageConverter.showImage("After segmentation")
+    ImageConverter.showImageQueue()
 if args.show_images:
     ImageConverter.showImage("Image")
 if args.save_images:
