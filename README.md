@@ -1,21 +1,21 @@
 # Knuckle print recognition
 
 *Dependencies*
-	* glob
-	* argparse
-	* scipy
-	* numpy
-	* matplotlib
-	* skimage
-	* opencv
+* glob
+* argparse
+* scipy
+* numpy
+* matplotlib
+* skimage
+* opencv
 
 **HOW TO EXECUTE**
 1. First create a file named setup.config and paste the image directory
-		For windows path don't forget to escape the forward slash characters i.e., '\' -> '\\' 
-		e.g.: C:\Images\TrainImages\ -> C:\\Images\\Trainimages\\
+	> For windows path don't forget to escape the forward slash characters i.e., `\` -> `\\`
+	<br>e.g.: C:\Images\TrainImages\ -> C:\\Images\\Trainimages\\
 		
 2. run:
-		python app.py --convert_to_grayscale --normalize_images --segment_images --compress_images --create_vector
+`python app.py --convert_to_grayscale --normalize_images --segment_images --compress_images --create_vector`
 
 ## Intuition:
 
