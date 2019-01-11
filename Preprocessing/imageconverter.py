@@ -103,10 +103,36 @@ class ImageConverter:
         for image in m_temporaryImageList:
             thresh = filters.threshold_otsu(image)
             mask = image < thresh
-            # ret , thresh = cv2.threshold(image,0,255,cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
             ImageConverter.imageQueue.append(mask)
         del m_temporaryImageList
-       
+
+    def compressImages(self):
+        encode_param=[int(cv2.IMWRITE_JPEG_QUALITY),90]
+        #encode to jpeg format
+        #encode param image quality 0 to 100. default:95
+        #if you want to shrink data size, choose low image quality.
+        m_temporaryImageList = []
+        m_temporaryImageList[:] = ImageConverter.imageQueue[:]
+        ImageConverter.imageQueue[:] = []
+        for imagearray in m_temporaryImageList:
+            result,encimg=cv2.imencode('.jpg',imagearray,encode_param)
+            if False==result:
+                print('could not encode image!')
+            #decode from jpeg format
+            decimg=cv2.imdecode(encimg,cv2.IMREAD_UNCHANGED)
+            ImageConverter.imageQueue.append(decimg)
+        del m_temporaryImageList
+
+    # this method will convert images to a vector
+    def imageToVector(self):
+        m_temporaryImageList = []
+        m_temporaryImageList[:] = ImageConverter.imageQueue[:]
+        ImageConverter.imageQueue[:] = []
+        for image in m_temporaryImageList:
+            vectorImage = image.flatten(order = 'K')
+            ImageConverter.imageQueue.append(vectorImage)
+        del m_temporaryImageList
+
     @staticmethod
     def showImageQueue():
         for i in ImageConverter.imageQueue:
@@ -122,4 +148,4 @@ class ImageConverter:
     @staticmethod
     def saveImage():
         for index,imagearray in enumerate(ImageConverter.imageQueue):
-            misc.imsave("saved_images\\{0}_new.jpg".format(index),imagearray)
+            cv2.imwrite("{0}_new.jpg".format(index),imagearray)

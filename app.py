@@ -21,40 +21,31 @@ parser.add_argument("--normalize_images", help="normalize images", action="store
 parser.add_argument("--show_images", help="show images in different window", action="store_true")
 parser.add_argument("--save_images", help="save images in a different folder", action="store_true")
 parser.add_argument("--segment_images",help = "transforms images into binary format",action = "store_true")
+parser.add_argument("--create_vector",help = "transforms image data into 1D array aka vector",action = "store_true")
+parser.add_argument("--compress_images",help = "compresses images",action = "store_true")
 
 args = parser.parse_args()
 
 imageConverter = ImageConverter(imageDir)
-# imageConverter.getOriginalImages()
+
 if args.convert_to_grayscale:
     imageConverter.convertToGrayScale()
-    # ImageConverter.showImageQueue()
 if args.add_noise:
     imageConverter.add_noise()
-    # imageConverter.getBlurValue()
-    # ImageConverter.showImage("After adding noise getting blur value")
-    # ImageConverter.showImageQueue()
 if args.add_blur:
     imageConverter.addBlur()
-    # imageConverter.getBlurValue()
-    # ImageConverter.showImage("After adding blur getting blur value")
 if args.de_noise:
     imageConverter.de_noise()
-    # imageConverter.getBlurValue()
-    # ImageConverter.showImage("After denoising getting blur value")
-    # ImageConverter.showImageQueue()
 if args.restore_images:
     imageConverter.deblurring()
-    # imageConverter.getBlurValue()
-    # ImageConverter.showImage("After removing blur getting blur value")
 if args.normalize_images:
     imageConverter.normalizeImages()
-    # ImageConverter.showImage("After normalizing")
-    # ImageConverter.showImageQueue()
+if args.compress_images:
+    imageConverter.compressImages()
 if args.segment_images:
     imageConverter.imageSegmentation()
-    ImageConverter.showImage("After segmentation")
-    ImageConverter.showImageQueue()
+if args.create_vector:
+    imageConverter.imageToVector()
 if args.show_images:
     ImageConverter.showImage("Image")
 if args.save_images:
