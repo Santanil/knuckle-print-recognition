@@ -1,9 +1,11 @@
 AUTHOR = "BIKRAM MODAK"
-print("***************** WELCOME TO KNUCKLE PRINT RECOGNITION SYSTEM *****************")
+print("***** WELCOME TO KNUCKLE PRINT RECOGNITION SYSTEM *****")
+print("///// BIKRAM MODAK /////")
 import argparse
 from Preprocessing.imageconverter import ImageConverter
 
 
+# configuration file for settings
 # other setup variables will be added later
 with open("setup.config",'r') as setupfile:
     imageDir = setupfile.read()
@@ -11,6 +13,7 @@ with open("setup.config",'r') as setupfile:
 print("\n\nLoading... ",end='')
 print(imageDir,"\n")
 
+# command line options and flags
 parser = argparse.ArgumentParser()
 parser.add_argument("--convert_to_grayscale", help="convert images to grayscale", action="store_true")
 parser.add_argument("--add_noise", help="add noise to the images", action="store_true")
@@ -26,8 +29,11 @@ parser.add_argument("--compress_images",help = "compresses images",action = "sto
 
 args = parser.parse_args()
 
+# image preproccessing 
+# image converter initialization
 imageConverter = ImageConverter(imageDir)
 
+# converting images to desired form
 if args.convert_to_grayscale:
     imageConverter.convertToGrayScale()
 if args.add_noise:
