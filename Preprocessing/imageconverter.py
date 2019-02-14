@@ -1,22 +1,24 @@
 AUTHOR = "BIKRAM MODAK"
 
-from glob import glob # for finding image files
-from scipy import ndimage,misc # for i/o and converting images to numpy arrays
-import numpy as np # for working image arrays and vectors
-import matplotlib.pyplot as plt # for visualizing images
-import cv2 # for various image manipulations
+from scipy import ndimage, misc  # for i/o and converting images to numpy arrays
+import numpy as np  # for working image arrays and vectors
+import matplotlib.pyplot as plt  # for visualizing images
+import cv2  # for various image manipulations
 from skimage import restoration
 from scipy.signal import convolve2d as conv2
 from skimage import filters
 
+
 class ImageConverter:
     """Converts images to different types of data"""
-    imageFIFO=[] # FIF0 to store images to be preprocessed
-    def __init__(self,imageDir):
+    imageFIFO = []  # FIF0 to store images to be preprocessed
+
+    def __init__(self, imageDir):
         print('*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*')
         print('|           IMAGE CONVERTER EXECUTING           |')
         print('*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*')
-        self.m_imagelist_rpath = glob(imageDir+"*")
+        self.m_imagelist_rpath = []
+        self.m_imagelist_rpath.append(imageDir)
 
     # fetching images of rgb format
     def getOriginalImages(self):
@@ -43,14 +45,14 @@ class ImageConverter:
 
     # adding noise into images
     def add_noise(self):
-        m_temporaryImageList = [] # temporary FIFO to hold images
-        m_temporaryImageList[:] = ImageConverter.imageFIFO[:] # pushing images from main FIFO to temporary FIFO
-        ImageConverter.imageFIFO[:] = [] # flushing main FIFO
+        m_temporaryImageList = []  # temporary FIFO to hold images
+        m_temporaryImageList[:] = ImageConverter.imageFIFO[:]  # pushing images from main FIFO to temporary FIFO
+        ImageConverter.imageFIFO[:] = []  # flushing main FIFO
         for image in m_temporaryImageList:
             # calculating and adding noise value into image pixel values
             m_noisy_image = image + 0.4 * image.std() * np.random.random(image.shape)
             ImageConverter.imageFIFO.append(m_noisy_image)
-        del m_temporaryImageList # dereferencing temporary FIFO
+        del m_temporaryImageList  # dereferencing temporary FIFO
 
     # removing noise data from images
     def de_noise(self):
@@ -59,11 +61,11 @@ class ImageConverter:
         ImageConverter.imageFIFO[:] = []
         for image in m_temporaryImageList:
             # using medial filter to smooth image pixels
-            denoised_image = ndimage.median_filter(image, size = 2)
+            denoised_image = ndimage.median_filter(image, size=2)
             ImageConverter.imageFIFO.append(denoised_image)
         del m_temporaryImageList
 
-    def detectBlur(self,image):
+    def detectBlur(self, image):
         # compute the Laplacian of the image and then return the focus
         # measure, which is simply the variance of the Laplacian
         return cv2.Laplacian(image, cv2.CV_64F).var()
@@ -75,7 +77,7 @@ class ImageConverter:
         ImageConverter.imageFIFO[:] = []
         for image in m_temporaryImageList:
             # using gaussian filter to smoothing images to a greater extent
-            very_blurred = ndimage.gaussian_filter(image,sigma=5)
+            very_blurred = ndimage.gaussian_filter(image, sigma=5)
             ImageConverter.imageFIFO.append(very_blurred)
         del m_temporaryImageList
 
@@ -92,7 +94,7 @@ class ImageConverter:
         ImageConverter.imageFIFO[:] = []
         for image in m_temporaryImageList:
             # deconvulating image data ; tbh; i don't understand this code snippet, copied from stackoverflow
-            deconvolved_image = restoration.wiener(image, psf , balance = 2110)
+            deconvolved_image = restoration.wiener(image, psf, balance=2110)
             ImageConverter.imageFIFO.append(deconvolved_image)
         del m_temporaryImageList
 
@@ -106,7 +108,7 @@ class ImageConverter:
         ImageConverter.imageFIFO[:] = []
         for image in m_temporaryImageList:
             normalizedImg = np.zeros(image.shape)
-            normalizedImg = cv2.normalize(image,  normalizedImg, 0, 255, cv2.NORM_MINMAX)
+            normalizedImg = cv2.normalize(image, normalizedImg, 0, 255, cv2.NORM_MINMAX)
             ImageConverter.imageFIFO.append(normalizedImg)
         del m_temporaryImageList
 
@@ -123,7 +125,7 @@ class ImageConverter:
         del m_temporaryImageList
 
     def compressImages(self):
-        encode_param=[int(cv2.IMWRITE_JPEG_QUALITY),90]
+        encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 90]
         # encode to jpeg format
         # encode param image quality 0 to 100. default:95
         # if you want to shrink data size, choose low image quality.
@@ -131,11 +133,11 @@ class ImageConverter:
         m_temporaryImageList[:] = ImageConverter.imageFIFO[:]
         ImageConverter.imageFIFO[:] = []
         for image in m_temporaryImageList:
-            result,encimg=cv2.imencode('.jpg',image,encode_param)
-            if False==result:
+            result, encimg = cv2.imencode('.jpg', image, encode_param)
+            if False == result:
                 print('could not compress image!')
             # decode from jpeg format
-            decimg=cv2.imdecode(encimg,cv2.IMREAD_UNCHANGED)
+            decimg = cv2.imdecode(encimg, cv2.IMREAD_UNCHANGED)
             ImageConverter.imageFIFO.append(decimg)
         del m_temporaryImageList
 
@@ -145,7 +147,7 @@ class ImageConverter:
         m_temporaryImageList[:] = ImageConverter.imageFIFO[:]
         ImageConverter.imageFIFO[:] = []
         for image in m_temporaryImageList:
-            vectorImage = image.flatten(order = 'K')
+            vectorImage = image.flatten(order='K')
             ImageConverter.imageFIFO.append(vectorImage)
         del m_temporaryImageList
 
@@ -159,10 +161,10 @@ class ImageConverter:
     def showImage(imagetitle):
         for imagearray in ImageConverter.imageFIFO:
             plt.title(imagetitle)
-            plt.imshow(imagearray,cmap=plt.cm.gray)
+            plt.imshow(imagearray, cmap=plt.cm.gray)
             plt.show()
 
     @staticmethod
     def saveImage():
-        for index,imagearray in enumerate(ImageConverter.imageFIFO):
-            misc.imsave("{0}_new.jpg".format(index),imagearray)
+        for index, imagearray in enumerate(ImageConverter.imageFIFO):
+            misc.imsave("{0}_new.jpg".format(index), imagearray)

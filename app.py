@@ -2,7 +2,7 @@ AUTHOR = "BIKRAM MODAK"
 print("***** WELCOME TO KNUCKLE PRINT RECOGNITION SYSTEM *****")
 print("///// BIKRAM MODAK /////")
 import argparse
-from Preprocessing.imageconverter import ImageConverter
+# from Preprocessing.imageconverter import ImageConverter
 from parse_config import ParseConfig
 from find_image import ImageFetch
 
@@ -33,9 +33,7 @@ if 'imageRootPath' in configparser.configs.keys():
 print(imageRootPath)
 
 imageFetch = ImageFetch(imageRootPath)
-temp = imageFetch.getPerPersonFolder()
-
-
+imageFetch.gotoPerPersonImageFolder()
 # image preproccessing
 # image converter initialization
 # imageConverter = ImageConverter(imageDir)
