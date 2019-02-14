@@ -4,3 +4,4 @@ run_app.bat
 setup.config
 *.pyc
 images
+*.idea

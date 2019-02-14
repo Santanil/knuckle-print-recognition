@@ -10,7 +10,7 @@ from scipy.signal import convolve2d as conv2
 from skimage import filters
 
 class ImageConverter:
-    
+    """Converts images to different types of data"""
     imageFIFO=[] # FIF0 to store images to be preprocessed
     def __init__(self,imageDir):
         print('*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*')
@@ -28,7 +28,7 @@ class ImageConverter:
                 ImageConverter.imageFIFO.append(m_image)
         except:
             print("--No images found!!")
-    
+
     # fetching images of rgb format and converting them into black white format
     def convertToGrayScale(self):
         # glob function finds files with the given pattern here is the string in image_directory
@@ -97,8 +97,8 @@ class ImageConverter:
         del m_temporaryImageList
 
     # normalizing images
-    # The normalization is a 
-    # process that changes the range of pixel intensity 
+    # The normalization is a
+    # process that changes the range of pixel intensity
     # values. Basically it has two steps
     def normalizeImages(self):
         m_temporaryImageList = []
@@ -109,7 +109,7 @@ class ImageConverter:
             normalizedImg = cv2.normalize(image,  normalizedImg, 0, 255, cv2.NORM_MINMAX)
             ImageConverter.imageFIFO.append(normalizedImg)
         del m_temporaryImageList
-    
+
     # to convert images into binary form (self-explanatory)
     def imageSegmentation(self):
         m_temporaryImageList = []
@@ -165,4 +165,4 @@ class ImageConverter:
     @staticmethod
     def saveImage():
         for index,imagearray in enumerate(ImageConverter.imageFIFO):
-            cv2.imwrite("{0}_new.jpg".format(index),imagearray)
+            misc.imsave("{0}_new.jpg".format(index),imagearray)

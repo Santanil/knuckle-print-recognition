@@ -3,15 +3,13 @@ print("***** WELCOME TO KNUCKLE PRINT RECOGNITION SYSTEM *****")
 print("///// BIKRAM MODAK /////")
 import argparse
 from Preprocessing.imageconverter import ImageConverter
+from parse_config import ParseConfig
+from find_image import ImageFetch
 
-
-# configuration file for settings
-# other setup variables will be added later
-with open("setup.config",'r') as setupfile:
-    imageDir = setupfile.read()
-
-print("\n\nLoading... ",end='')
-print(imageDir,"\n")
+####################
+# Global Variables #
+####################
+imageRootPath = ""
 
 # command line options and flags
 parser = argparse.ArgumentParser()
@@ -29,30 +27,40 @@ parser.add_argument("--compress_images",help = "compresses images",action = "sto
 
 args = parser.parse_args()
 
-# image preproccessing 
+configparser = ParseConfig()
+if 'imageRootPath' in configparser.configs.keys():
+    imageRootPath = configparser.configs['imageRootPath']
+print(imageRootPath)
+
+imageFetch = ImageFetch(imageRootPath)
+temp = imageFetch.getPerPersonFolder()
+
+
+# image preproccessing
 # image converter initialization
-imageConverter = ImageConverter(imageDir)
+# imageConverter = ImageConverter(imageDir)
 
 # converting images to desired form
-if args.convert_to_grayscale:
-    imageConverter.convertToGrayScale()
-if args.add_noise:
-    imageConverter.add_noise()
-if args.add_blur:
-    imageConverter.addBlur()
-if args.de_noise:
-    imageConverter.de_noise()
-if args.restore_images:
-    imageConverter.deblurring()
-if args.normalize_images:
-    imageConverter.normalizeImages()
-if args.compress_images:
-    imageConverter.compressImages()
-if args.segment_images:
-    imageConverter.imageSegmentation()
-if args.create_vector:
-    imageConverter.imageToVector()
-if args.show_images:
-    ImageConverter.showImage("Image")
-if args.save_images:
-    ImageConverter.saveImage()
+# if args.convert_to_grayscale:
+#     imageConverter.convertToGrayScale()
+# if args.add_noise:
+#     imageConverter.add_noise()
+# if args.add_blur:
+#     imageConverter.addBlur()
+# if args.de_noise:
+#     imageConverter.de_noise()
+# if args.restore_images:
+#     imageConverter.deblurring()
+# if args.normalize_images:
+#     imageConverter.normalizeImages()
+# if args.compress_images:
+#     imageConverter.compressImages()
+# if args.segment_images:
+#     imageConverter.imageSegmentation()
+# if args.create_vector:
+#     imageConverter.imageToVector()
+#     ImageConverter.showimageFIFO()
+# if args.show_images:
+#     ImageConverter.showImage("Image")
+# if args.save_images:
+#     ImageConverter.saveImage()
