@@ -2,9 +2,10 @@ AUTHOR = "BIKRAM MODAK"
 print("***** WELCOME TO KNUCKLE PRINT RECOGNITION SYSTEM *****")
 print("///// BIKRAM MODAK /////")
 import argparse
-# from Preprocessing.imageconverter import ImageConverter
+from Preprocessing.imageconverter import ImageConverter
 from parse_config import ParseConfig
 from find_image import ImageFetch
+from pprint import pprint
 
 ####################
 # Global Variables #
@@ -30,10 +31,22 @@ args = parser.parse_args()
 configparser = ParseConfig()
 if 'imageRootPath' in configparser.configs.keys():
     imageRootPath = configparser.configs['imageRootPath']
-print(imageRootPath)
 
 imageFetch = ImageFetch(imageRootPath)
-imageFetch.gotoPerPersonImageFolder()
+no_of_individuals = imageFetch.totalnumberofindividuals()
+
+list_of_per_person_finger_wise_folders = imageFetch.getimageperpersonimagelist()
+
+fifo_process_images_of_every_person_objects = []
+
+for i in range(0,no_of_individuals+1):
+    fifo_process_images_of_every_person_objects.append(ImageConverter(list_of_per_person_finger_wise_folders[i]))
+    fifo_process_images_of_every_person_objects[i].convertToGrayScale()
+    fifo_process_images_of_every_person_objects[i].imageToVector()
+
+ImageConverter.showimageFIFO()
+# length of imageFIFO should be 3546 and practical result is 2955
+
 # image preproccessing
 # image converter initialization
 # imageConverter = ImageConverter(imageDir)

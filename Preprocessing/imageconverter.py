@@ -7,41 +7,43 @@ import cv2  # for various image manipulations
 from skimage import restoration
 from scipy.signal import convolve2d as conv2
 from skimage import filters
-
+import os
 
 class ImageConverter:
     """Converts images to different types of data"""
     imageFIFO = []  # FIF0 to store images to be preprocessed
 
-    def __init__(self, imageDir):
-        print('*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*')
-        print('|           IMAGE CONVERTER EXECUTING           |')
-        print('*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*')
-        self.m_imagelist_rpath = []
-        self.m_imagelist_rpath.append(imageDir)
+    def __init__(self, per_person_finger_wise_imagedir_list):
+
+        self.m_fingerwise_imagefolder_list = []
+        self.m_fingerwise_imagefolder_list = per_person_finger_wise_imagedir_list
 
     # fetching images of rgb format
-    def getOriginalImages(self):
-        # glob function finds files with the given pattern here is the string in image_directory
-        try:
-            for imagerpath in self.m_imagelist_rpath:
-                m_image = cv2.imread(imagerpath)
-                # print("Image Shape:",m_image.shape,type(m_image))
-                ImageConverter.imageFIFO.append(m_image)
-        except:
-            print("--No images found!!")
+    # def getOriginalImages(self):
+    #     # glob function finds files with the given pattern here is the string in image_directory
+    #     try:
+    #         for imagerpath in self.m_fingerwise_imagefolder_list:
+    #             m_image = cv2.imread(imagerpath)
+    #             # print("Image Shape:",m_image.shape,type(m_image))
+    #             ImageConverter.imageFIFO.append(m_image)
+    #     except:
+    #         print("--No images found!!")
 
     # fetching images of rgb format and converting them into black white format
     def convertToGrayScale(self):
         # glob function finds files with the given pattern here is the string in image_directory
         try:
-            for imagerpath in self.m_imagelist_rpath:
-                m_image = cv2.imread(imagerpath)
-                m_gray_image = cv2.cvtColor(m_image, cv2.COLOR_BGR2GRAY)
-                # print("Image Shape after grayscale conversion:",m_gray_image.shape,type(m_gray_image))
-                ImageConverter.imageFIFO.append(m_gray_image)
-        except:
-            print("--No images found!")
+            for fingerimagefolder in self.m_fingerwise_imagefolder_list:
+                list_of_image = os.listdir(fingerimagefolder)
+                for imagenum in list_of_image[0:5]:
+                    imagerpath = fingerimagefolder+ "\\" + imagenum
+                    m_image = cv2.imread(imagerpath)
+                    m_gray_image = cv2.cvtColor(m_image, cv2.COLOR_BGR2GRAY)
+                    # print("Image Shape after grayscale conversion:",m_gray_image.shape,type(m_gray_image))
+                    ImageConverter.imageFIFO.append(m_gray_image)
+        except Exception as e:
+            print(e)
+            print("\n--No images found!\nor\n--No Folder Found!\n")
 
     # adding noise into images
     def add_noise(self):
@@ -153,8 +155,8 @@ class ImageConverter:
 
     @staticmethod
     def showimageFIFO():
+        print("Length of input matrix",len(ImageConverter.imageFIFO))
         for imagedata in ImageConverter.imageFIFO:
-            print(imagedata.shape)
             print(imagedata)
 
     @staticmethod
