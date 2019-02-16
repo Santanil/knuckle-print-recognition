@@ -6,8 +6,16 @@ import matplotlib.pyplot as plt  # for visualizing images
 import cv2  # for various image manipulations
 from skimage import restoration
 from scipy.signal import convolve2d as conv2
-from skimage import filters
 import os
+import sys
+sys.path.append("..")
+# import app
+# import csv
+# save_file_path = "dataset.csv"
+# file = open(save_file_path,'w',newline= '')
+# writer =csv.writer(file)
+
+image_counter = 0
 
 class ImageConverter:
     """Converts images to different types of data"""
@@ -18,6 +26,7 @@ class ImageConverter:
         self.m_fingerwise_imagefolder_list = []
         self.m_fingerwise_imagefolder_list = per_person_finger_wise_imagedir_list
 
+    # deprecated
     # fetching images of rgb format
     # def getOriginalImages(self):
     #     # glob function finds files with the given pattern here is the string in image_directory
@@ -32,29 +41,33 @@ class ImageConverter:
     # fetching images of rgb format and converting them into black white format
     def convertToGrayScale(self):
         # glob function finds files with the given pattern here is the string in image_directory
+        global image_counter
         try:
             for fingerimagefolder in self.m_fingerwise_imagefolder_list:
                 list_of_image = os.listdir(fingerimagefolder)
-                for imagenum in list_of_image[0:5]:
+                for imagenum in list_of_image[0:6]:
+                    image_counter += 1
                     imagerpath = fingerimagefolder+ "\\" + imagenum
+                    # print(imagerpath)
                     m_image = cv2.imread(imagerpath)
                     m_gray_image = cv2.cvtColor(m_image, cv2.COLOR_BGR2GRAY)
                     # print("Image Shape after grayscale conversion:",m_gray_image.shape,type(m_gray_image))
                     ImageConverter.imageFIFO.append(m_gray_image)
-        except Exception as e:
-            print(e)
+        except:
+            print(str(OSError))
             print("\n--No images found!\nor\n--No Folder Found!\n")
+            pass
 
     # adding noise into images
     def add_noise(self):
-        m_temporaryImageList = []  # temporary FIFO to hold images
-        m_temporaryImageList[:] = ImageConverter.imageFIFO[:]  # pushing images from main FIFO to temporary FIFO
+        m_temporary_image_list = []  # temporary FIFO to hold images
+        m_temporary_image_list[:] = ImageConverter.imageFIFO[:]  # pushing images from main FIFO to temporary FIFO
         ImageConverter.imageFIFO[:] = []  # flushing main FIFO
-        for image in m_temporaryImageList:
+        for image in m_temporary_image_list:
             # calculating and adding noise value into image pixel values
             m_noisy_image = image + 0.4 * image.std() * np.random.random(image.shape)
             ImageConverter.imageFIFO.append(m_noisy_image)
-        del m_temporaryImageList  # dereferencing temporary FIFO
+        del m_temporary_image_list  # dereferencing temporary FIFO
 
     # removing noise data from images
     def de_noise(self):
@@ -120,10 +133,11 @@ class ImageConverter:
         m_temporaryImageList[:] = ImageConverter.imageFIFO[:]
         ImageConverter.imageFIFO[:] = []
         for image in m_temporaryImageList:
-            # getting threshold value
-            thresh = filters.threshold_otsu(image)
-            mask = image < thresh
-            ImageConverter.imageFIFO.append(mask)
+            ret, thresh = cv2.threshold(image, 0, 255,
+                                        cv2.THRESH_BINARY_INV +
+                                        cv2.THRESH_OTSU)
+            thresh[thresh == 255] = 1
+            ImageConverter.imageFIFO.append(thresh)
         del m_temporaryImageList
 
     def compressImages(self):
@@ -155,8 +169,11 @@ class ImageConverter:
 
     @staticmethod
     def showimageFIFO():
-        print("Length of input matrix",len(ImageConverter.imageFIFO))
+        # global image_counter
+        # print("Length of input matrix",len(ImageConverter.imageFIFO))
+        # print("No of images:",image_counter)
         for imagedata in ImageConverter.imageFIFO:
+            # print(imagedata.shape)
             print(imagedata)
 
     @staticmethod
@@ -165,6 +182,11 @@ class ImageConverter:
             plt.title(imagetitle)
             plt.imshow(imagearray, cmap=plt.cm.gray)
             plt.show()
+
+    @staticmethod
+    def writetodatasetfile():
+        print("Writing to file.\n")
+        np.savetxt("dataset.csv",ImageConverter.imageFIFO,delimiter=",",fmt="%i")
 
     @staticmethod
     def saveImage():
