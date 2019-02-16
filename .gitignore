@@ -1,6 +1,6 @@
 .vscode/settings.json
-imagecleanup.bat
-run_app.bat
+createdataset.bat
+trainmodel.bat
 setup.config
 *.pyc
 images
