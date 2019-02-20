@@ -29,6 +29,7 @@ parser.add_argument("--compress_images",help = "compresses images",action = "sto
 args = parser.parse_args()
 
 configparser = ParseConfig()
+
 if 'imageRootPath' in configparser.configs.keys():
     imageRootPath = configparser.configs['imageRootPath']
 
@@ -42,7 +43,6 @@ fifo_process_images_of_every_person_objects = []
 
 pprint("Processing 591 images")
 
-@lru_cache(maxsize=4000)
 def processImages():
     global no_of_individuals
     try:
