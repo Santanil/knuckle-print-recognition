@@ -2,7 +2,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-from scipy.spatial import distance
+from Algorithms.clusteringalgorithms import ClusteringAlgorithms
+
 from parse_config import ParseConfig
 
 configparser = ParseConfig()
@@ -16,31 +17,16 @@ else:
 # Importing the dataset
 dataset = pd.read_csv(datasetAbsPath, header=None)
 X = dataset.values
-no_of_clusters = 2
-clusters = [[None]] * no_of_clusters
 
-def OCA(input_arr,thresh):
-     # confirm with mam how to choose the proper no. of clusters
-    X = input_arr
-    
-    global clusters
-    # selecting first image to find euclidean distance with
-    # other images in X aka. input_arr
-    clusters[0]  = X[0] # clusters[i] is also a list
-    clusters[-1] =X[-1]
-    try:
-        for i in range(0, no_of_clusters):
-            for sample in X[1:-1]:
-                dist = distance.euclidean(clusters[i], sample)
-                if dist < thresh:
-                    np.append(clusters[0],sample)
-                    print(clusters[0])
-                    
-                elif dist > thresh:
-                    np.append(clusters[-1],sample)
-                    
-    except Exception as e:
-        print(e)
-        pass
+# calculating and printing no.of image samples
+num_of_image_samples_in_matrix = len(dataset.index)
+# print(num_of_image_samples_in_matrix)
 
-OCA(X,70)
+num_of_images_per_fingerknuckle = 6
+# print(num_of_images_per_fingerknuckle)
+total_number_of_clusters =int(num_of_image_samples_in_matrix / num_of_images_per_fingerknuckle)
+print("Total number of clusters taken:", total_number_of_clusters)
+
+clusteralgoObj = ClusteringAlgorithms(X)
+clusters  = clusteralgoObj.OCA(total_number_of_clusters,threshold = 70)
+# print((clusters[0][0]))

@@ -5,3 +5,4 @@ setup.config
 *.pyc
 images
 *.idea
+*.csv

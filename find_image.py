@@ -15,9 +15,9 @@ class ImageFetch:
         self.rootimagedirectory = imagerootpath
 
     def totalnumberofindividuals(self):
-        num_of_dirs_in_root = len(os.listdir(self.rootimagedirectory))
-		num_of_individuals = 10
-        
+        # num_of_dirs_in_root = len(os.listdir(self.rootimagedirectory))
+
+        num_of_individuals = 10 # int(num_of_dirs_in_root / 4) + 1 , hard coded to 10 ;  Sumana mam's instruction
         # 4 because the dateset contains 4 finger knuckle samples
         # int(num_of_dirs_in_root / 4) + 1 # +1 so that if a for a person has 3 finger samples that wont be excluded
 
@@ -58,7 +58,7 @@ class ImageFetch:
         leftmiddlelist = self.getLeftMiddleFolders()
         rightindexlist = self.getRightIndexFolders()
         rightmiddlelist = self.getRightMiddleFolders()
-        for i in range(0, self.totalnumberofindividuals()+1):
+        for i in range(0, self.totalnumberofindividuals()):
             leftindexfolder = self.rootimagedirectory + leftindexlist[i]
             leftmiddlefolder = self.rootimagedirectory + leftmiddlelist[i]
             rightindexfolder = self.rootimagedirectory + rightindexlist[i]

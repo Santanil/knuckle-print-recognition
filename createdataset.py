@@ -5,13 +5,12 @@ import argparse
 from Preprocessing.imageconverter import ImageConverter
 from parse_config import ParseConfig
 from find_image import ImageFetch
-from pprint import pprint
 
 ####################
 # Global Variables #
 ####################
 imageRootPath = ""
-# preprocessed_dataset = np.empty()
+fifo_process_images_of_every_person_objects = []
 
 # command line options and flags
 parser = argparse.ArgumentParser()
@@ -26,6 +25,8 @@ parser.add_argument("--save_images", help="save images in a different folder", a
 parser.add_argument("--segment_images",help = "transforms images into binary format",action = "store_true")
 parser.add_argument("--create_vector",help = "transforms image data into 1D array aka vector",action = "store_true")
 parser.add_argument("--compress_images",help = "compresses images",action = "store_true")
+parser.add_argument("--debug",help ="Used to debug",action = "store_true")
+parser.add_argument("--createcsvfile",help = "Writes data in matrix into a file",action = "store_true")
 args = parser.parse_args()
 
 configparser = ParseConfig()
@@ -39,14 +40,17 @@ no_of_individuals = imageFetch.totalnumberofindividuals()
 
 list_of_per_person_finger_wise_folders = imageFetch.getimageperpersonimagelist()
 
-fifo_process_images_of_every_person_objects = []
-
-pprint("Processing 591 images")
+if args.debug:
+    print(no_of_individuals)
+    print(imageRootPath)
+    for personfolderpath in list_of_per_person_finger_wise_folders:
+        for folderpath in personfolderpath:
+            print(folderpath)
 
 def processImages():
     global no_of_individuals
     try:
-        for i in range(0, no_of_individuals + 1):
+        for i in range(0, no_of_individuals):
             print("Processing image of individual:", i + 1)
             fifo_process_images_of_every_person_objects.append(
                 ImageConverter(list_of_per_person_finger_wise_folders[i]))
@@ -64,13 +68,14 @@ def processImages():
 processImages()
 
 
-pprint("Preprocessing Done.")
+print("Preprocessing Done.")
 
-# ImageConverter.writetodatasetfile()
+if args.createcsvfile:
+    ImageConverter.writetodatasetfile()
 
-ImageConverter.showimageFIFO()
+# ImageConverter.showimageFIFO()
 
 if args.show_images:
     ImageConverter.showImage("Image")
 
-pprint("Exiting...")
+print("Exiting...")

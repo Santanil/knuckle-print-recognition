@@ -26,18 +26,6 @@ class ImageConverter:
         self.m_fingerwise_imagefolder_list = []
         self.m_fingerwise_imagefolder_list = per_person_finger_wise_imagedir_list
 
-    # deprecated
-    # fetching images of rgb format
-    # def getOriginalImages(self):
-    #     # glob function finds files with the given pattern here is the string in image_directory
-    #     try:
-    #         for imagerpath in self.m_fingerwise_imagefolder_list:
-    #             m_image = cv2.imread(imagerpath)
-    #             # print("Image Shape:",m_image.shape,type(m_image))
-    #             ImageConverter.imageFIFO.append(m_image)
-    #     except:
-    #         print("--No images found!!")
-
     # fetching images of rgb format and converting them into black white format
     def convertToGrayScale(self):
         # glob function finds files with the given pattern here is the string in image_directory
@@ -186,7 +174,7 @@ class ImageConverter:
     @staticmethod
     def writetodatasetfile():
         print("Writing to file.\n")
-        np.savetxt("dataset.csv",ImageConverter.imageFIFO,delimiter=",",fmt="%i")
+        np.savetxt("matrix.csv",ImageConverter.imageFIFO,delimiter=",",fmt="%i")
 
     @staticmethod
     def saveImage():
