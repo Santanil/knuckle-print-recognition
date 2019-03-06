@@ -24,45 +24,45 @@ class ClusteringAlgorithms:
             Threshold :Intra cluster distance i.e. distance between 2 images of a cluster.\
         """
         points = self.input_array
-        dist = []
-        value_of_points = np.zeros(shape = (n_clusters,1), dtype = float)
-
-        # Create a cluster containing the first randomly selected point; mean of the cluster is equal to the value of the point
-        clusters = []
+        # dist = []
+        # value_of_points = np.zeros(shape = (n_clusters,1), dtype = float)
+        clusters = [] # Create a cluster containing the first randomly selected point; mean of the cluster is equal to the value of the point
         clusters.append([self.input_array[0]]) # initiating clusters(0) with first image
-        # value_of_points[0] = np.mean(clusters[0][0])
-
+        
         """ for each existing cluster ci do calculate the difference di between any randomly selected point not yet clustered and
-            the current cluster means;"""
+            the current cluster means;
+        """
         for i in range(1,len(points)):
+        	print("\nStarting from image-2;\nsince image-1 is already in cluster-1\n")
             for index in range(len(clusters)):
-                print("calculating for cluster-",index+1)
+
+                print("\nCalculating for cluster-",index+1)
                 print("Image num: ",i+1)
-                d= distance.euclidean(np.mean(clusters[index],axis=0),points[i]) # axis =0  means column wise .i.e, average row
-                # print("Value of di calculated: ",di)
+
+                d = distance.euclidean(np.mean(clusters[index],axis=0),points[i]) # axis =0  means column wise
+
+                # print("\nValue of di calculated: ",di)
                 # dist.append(di)
                 # d = min(dist)
-                print("Value of d: ",d)
-                print("Sleeping...")
-                print()
-                time.sleep(4)
+
+                print("\nValue of d: ",d)
+                print("\n\nSleeping...\n")
+                time.sleep(3)
+
                 print("Current no. of clusters: ",len(clusters))
-                # print(clusters)
+
                 if d <= threshold:
-                    print()
-                    print(d,"less than equal to",threshold)
-                    print("inserting at : ",index+1,"-cluster")
                     clusters[index].append(points[i])
-                    # print("Cluster[",index,"]: ",clusters[index])
-                    print()
-                    # value_of_points[index] = np.mean(clusters[index],axis=0)
+
+                    print("\n",d," less than equal to ",threshold)
+                    print("\nInserting at :cluster-",index+1)
+                    print("Cluster[",index,"]: ",clusters[index])
+
                 elif d > threshold:
-                    print()
-                    print(d,"greater than",threshold)
-                    print("creating new cluster",index+2)
-                    print()
-                    clusters.append([points[i]])
-                   # value_of_points[index+1] = np.mean(clusters[index+1])
+                	clusters.append([points[i]])
+
+                    print("\n",d," greater than ",threshold)
+                    print("\nCreating new cluster",index+2)
 
         # for i in range(n_clusters):
         #     time.sleep(2)
