@@ -28,14 +28,11 @@ class ClusteringAlgorithms:
         # value_of_points = np.zeros(shape = (n_clusters,1), dtype = float)
         clusters = [] # Create a cluster containing the first randomly selected point; mean of the cluster is equal to the value of the point
         clusters.append([self.input_array[0]]) # initiating clusters(0) with first image
-        
         """ for each existing cluster ci do calculate the difference di between any randomly selected point not yet clustered and
             the current cluster means;
         """
         for i in range(1,len(points)):
-        	print("\nStarting from image-2;\nsince image-1 is already in cluster-1\n")
             for index in range(len(clusters)):
-
                 print("\nCalculating for cluster-",index+1)
                 print("Image num: ",i+1)
 
@@ -53,17 +50,8 @@ class ClusteringAlgorithms:
 
                 if d <= threshold:
                     clusters[index].append(points[i])
-
                     print("\n",d," less than equal to ",threshold)
                     print("\nInserting at :cluster-",index+1)
-                    print("Cluster[",index,"]: ",clusters[index])
 
                 elif d > threshold:
                 	clusters.append([points[i]])
-
-                    print("\n",d," greater than ",threshold)
-                    print("\nCreating new cluster",index+2)
-
-        # for i in range(n_clusters):
-        #     time.sleep(2)
-        #     print(i,clusters[i])

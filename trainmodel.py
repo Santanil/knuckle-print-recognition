@@ -28,4 +28,4 @@ total_number_of_clusters =int(num_of_image_samples_in_matrix / num_of_images_per
 print("Total number of clusters taken:", total_number_of_clusters)
 
 clusteralgoObj = ClusteringAlgorithms(X)
-clusteralgoObj.OCA(total_number_of_clusters,threshold = 70.1)
+clusteralgoObj.OCA(total_number_of_clusters,threshold = 60.1)
