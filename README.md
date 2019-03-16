@@ -11,31 +11,34 @@
 
 **HOW TO EXECUTE**
 1. First create a file named setup.config and paste the image directory
-    <pre>imageRootPath = C:\pathtothedirectory </pre>
+    <pre>imageRootPath = C:\pathtothedirectory\</pre>
 		
-2. run:
-<pre>python app.py --convert_to_grayscale --normalize_images --segment_images --create_vector</pre>
+2. To create data pattern point-
+<pre>python createdataset.py --convert_to_grayscale --normalize_images --de_noise --create_vector --createcsvfile</pre>
  <br>
- This will create a 1D matrix which will be saved in a file named in dataset.csv
+ This will create a 1D matrix which will be saved in a file named in matrix.csv
  
-3. edit
+3. To train model-
+<pre>python trainmodel.py</pre>
 
 **Directory structure**
 <pre>
-
 C:\knuckle-print-recognition
 |   .gitignore
+|   apputility.py
 |   createdataset.py
 |   find_image.py
+|   matrix.csv
 |   parse_config.py
 |   README.md
 |   setup.config
 |   trainmodel.py
-|   dataset.csv 
+|
++---Algorithms
+|       clusteringalgorithms.py
+|
 \---Preprocessing
         imageconverter.py
-        
-
 </pre>
 
 ## Intuition:
@@ -48,6 +51,9 @@ Preprocessing steps-
 - [x] 4. Removal of Noise: Noise is certain to arise in the pictures, and thus if the pictures of the  knuckle prints images are noisy, then noises are removed from  knuckle prints images to help in better recognition of the image. In this process 2D Median Filter have been used.
 - [x] 5. Deblurring: Next step is to Deblur the parts of the image. We use Wiener Filter have been used to De Blur the blurred images to Deblur the Blurred parts so that the edges and the sharpness of the points in the images do not get destroyed and the knuckle print image is recognizable easily for processing.
 - [x] 6. Image Normalisation: The normalization is a process that changes the range of pixel intensity values. Basically it has two steps. The first one is to "cut" values too high or too low. i.e. if the image matrix has negative values one set them to zero and if the image matrix has values higher than max value one set them to max values. The second one is to linear stretch all the values in order to fit them into the interval [0, max value].
-- [x] 7. Conversion of Gray scale images into Binary Images: This process converts the gray scale patterns into binary image (2D matrix file). We Convert a Grayscale Image to Binary Image using Thresholding. Thresholding is the simplest method of image segmentation and the most common way to convert a grayscale image to a binary image.
-- [x] 8. Conversion of compressed Binary Patterns into 1D vector: Finally the 2D matrix knuckle print files are converted into its corresponding 1D vector files.
+- [x] 7. Conversion of compressed Binary Patterns into 1D vector: Finally the 2D matrix knuckle print files are converted into its corresponding 1D vector files.
 This set then become the input of the OCA.
+
+### Clustering
+Clustering images according to fingers
+-Each finger cluster will contain n no. of image samples
