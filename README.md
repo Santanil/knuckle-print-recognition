@@ -7,7 +7,7 @@
 * matplotlib
 * pandas
 * skimage
-* opencv
+* opencv-python
 
 **HOW TO EXECUTE**
 1. First create a file named setup.config and paste the image directory
