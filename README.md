@@ -15,9 +15,8 @@
 		
 2. To create data pattern point-
 <pre>python createdataset.py --convert_to_grayscale --normalize_images --de_noise --create_vector --createcsvfile</pre>
- <br>
  This will create a 1D matrix which will be saved in a file named in matrix.csv
- 
+ <br><br>
 3. To train model-
 <pre>python trainmodel.py</pre>
 
