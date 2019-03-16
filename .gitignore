@@ -7,3 +7,4 @@ setup.config
 images
 *.idea
 *.csv
+*.log

@@ -1,10 +1,11 @@
 AUTHOR = "BIKRAM MODAK"
 print("***** WELCOME TO KNUCKLE PRINT RECOGNITION SYSTEM *****")
-print("///// BIKRAM MODAK /////")
 import argparse
 from Preprocessing.imageconverter import ImageConverter
 from parse_config import ParseConfig
 from find_image import ImageFetch
+from apputility import printProgressBar
+import os
 
 ####################
 # Global Variables #
@@ -50,18 +51,20 @@ if args.debug:
 def processImages():
     global no_of_individuals
     try:
+        # Initial call to print 0% progress
+        printProgressBar(0, no_of_individuals, prefix = 'Progress:', suffix = 'Complete', length = 50)
         for i in range(0, no_of_individuals):
-            print("Processing image of individual:", i + 1)
             fifo_process_images_of_every_person_objects.append(
                 ImageConverter(list_of_per_person_finger_wise_folders[i]))
             if args.convert_to_grayscale:
                 fifo_process_images_of_every_person_objects[i].convertToGrayScale()
+            if args.de_noise:
+                fifo_process_images_of_every_person_objects[i].de_noise()
             if args.normalize_images:
                 fifo_process_images_of_every_person_objects[i].normalizeImages()
-            if args.segment_images:
-                fifo_process_images_of_every_person_objects[i].imageSegmentation()
             if args.create_vector:
                 fifo_process_images_of_every_person_objects[i].imageToVector()
+            printProgressBar(i + 1, no_of_individuals, prefix = 'Progress:', suffix = 'Complete', length = 50)
     except:
         print("error " + str(TypeError))
 
@@ -72,10 +75,12 @@ print("Preprocessing Done.")
 
 if args.createcsvfile:
     ImageConverter.writetodatasetfile()
-
-# ImageConverter.showimageFIFO()
+if args.debug:
+    ImageConverter.showimageFIFO()
 
 if args.show_images:
     ImageConverter.showImage("Image")
 
 print("Exiting...")
+if (os.path.isfile("cleanup.bat")):
+    os.system("cleanup.bat")

@@ -1,6 +1,8 @@
 # Importing the libraries
 import numpy as np
 import matplotlib.pyplot as plt
+import os
+
 import pandas as pd
 from Algorithms.clusteringalgorithms import ClusteringAlgorithms
 
@@ -27,5 +29,12 @@ num_of_images_per_fingerknuckle = 6
 total_number_of_clusters =int(num_of_image_samples_in_matrix / num_of_images_per_fingerknuckle)
 print("Total number of clusters taken:", total_number_of_clusters)
 
+print("Clustering started....")
 clusteralgoObj = ClusteringAlgorithms(X)
-clusteralgoObj.OCA(total_number_of_clusters,threshold = 60.1)
+clusteralgoObj.OCA(total_number_of_clusters,threshold = 700.1)
+print("Clustering has ended.....")
+
+input("PRESS ANY KEY TO EXIT...")
+if (os.path.isfile("cleanup.bat")):
+    print("Cleaning...")
+    os.system("cleanup.bat")
