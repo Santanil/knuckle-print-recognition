@@ -1,8 +1,10 @@
 .vscode/settings.json
 createdataset.bat
 trainmodel.bat
+cleanup.bat
 setup.config
 *.pyc
 images
 *.idea
 *.csv
+*.log

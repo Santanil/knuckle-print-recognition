@@ -64,8 +64,11 @@ class ImageConverter:
         ImageConverter.imageFIFO[:] = []
         for image in m_temporaryImageList:
             # using medial filter to smooth image pixels
-            denoised_image = ndimage.median_filter(image, size=2)
-            ImageConverter.imageFIFO.append(denoised_image)
+            if self.detectBlur(image) > 700 :
+                denoised_image = ndimage.median_filter(image, size=2)
+                ImageConverter.imageFIFO.append(denoised_image)
+            else:
+                ImageConverter.imageFIFO.append(image)
         del m_temporaryImageList
 
     def detectBlur(self, image):
@@ -80,8 +83,8 @@ class ImageConverter:
         ImageConverter.imageFIFO[:] = []
         for image in m_temporaryImageList:
             # using gaussian filter to smoothing images to a greater extent
-            very_blurred = ndimage.gaussian_filter(image, sigma=5)
-            ImageConverter.imageFIFO.append(very_blurred)
+            blurred_image = ndimage.gaussian_filter(image,2)
+            ImageConverter.imageFIFO.append(blurred_image)
         del m_temporaryImageList
 
     def getBlurValue(self):
