@@ -55,4 +55,5 @@ This set then become the input of the OCA.
 
 ### Clustering
 Clustering images according to fingers
+<br>
 -Each finger cluster will contain n no. of image samples
