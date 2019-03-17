@@ -60,8 +60,8 @@ def processImages():
                 fifo_process_images_of_every_person_objects[i].convertToGrayScale()
             if args.de_noise:
                 fifo_process_images_of_every_person_objects[i].de_noise()
-            if args.normalize_images:
-                fifo_process_images_of_every_person_objects[i].normalizeImages()
+            # if args.normalize_images:
+            #     fifo_process_images_of_every_person_objects[i].normalizeImages()
             if args.create_vector:
                 fifo_process_images_of_every_person_objects[i].imageToVector()
             printProgressBar(i + 1, no_of_individuals, prefix = 'Progress:', suffix = 'Complete', length = 50)

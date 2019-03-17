@@ -31,7 +31,7 @@ print("Total number of clusters taken:", total_number_of_clusters)
 
 print("Clustering started....")
 clusteralgoObj = ClusteringAlgorithms(X)
-clusteralgoObj.OCA(total_number_of_clusters,threshold = 700.1)
+clusteralgoObj.OCA(total_number_of_clusters,threshold = 1781.0)
 print("Clustering has ended.....")
 
 input("PRESS ANY KEY TO EXIT...")
